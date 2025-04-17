@@ -3,6 +3,7 @@ import Header from "../components/Header.astro";
 import "../styles/global.css";
 
 import { ClientRouter, fade } from "astro:transitions";
+import ThemeSwitcher from "../components/ThemeSwitcher.svelte";
 
 const { pageTitle } = Astro.props;
 
@@ -40,13 +41,14 @@ const crossFade = {
   <body>
     <div class="outer">
       <Header />
-      <h1 transition:name="page-title" class="info-box">
+      <h1 transition:name="page-title" class="elevated-card">
         {pageTitle}
       </h1>
       <main>
         <slot />
       </main>
     </div>
+    <ThemeSwitcher client:load transition:persist="theme-switcher" />
   </body>
 </html>
 
@@ -61,7 +63,106 @@ const crossFade = {
   }
 </style>
 
-<script is:inline>
+<script></script>
+
+<script>
+  import {
+    accent,
+    lightFlavor,
+    darkFlavor,
+    type Flavor,
+  } from "../stores/theme";
+
+  const variables = [
+    "rosewater",
+    "flamingo",
+    "pink",
+    "mauve",
+    "red",
+    "maroon",
+    "peach",
+    "yellow",
+    "green",
+    "teal",
+    "sky",
+    "sapphire",
+    "blue",
+    "lavender",
+    "text",
+    "subtext1",
+    "subtext0",
+    "overlay2",
+    "overlay1",
+    "overlay0",
+    "surface2",
+    "surface1",
+    "surface0",
+    "base",
+    "mantle",
+    "crust",
+  ];
+
+  function setLightFlavor(flavor: Flavor, docElement: HTMLElement) {
+    for (let i = 0; i < variables.length; i++) {
+      const variable = variables[i];
+      docElement.style.setProperty(
+        `--ctp-light-${variable}`,
+        `var(--ctp-${flavor}-${variable})`
+      );
+      docElement.style.setProperty(
+        `--ctp-light-${variable}-rgb`,
+        `var(--ctp-${flavor}-${variable}-rgb)`
+      );
+      docElement.style.setProperty(
+        `--ctp-light-${variable}-hsl`,
+        `var(--ctp-${flavor}-${variable}-hsl)`
+      );
+    }
+  }
+
+  function setDarkFlavor(flavor: Flavor, docElement: HTMLElement) {
+    for (let i = 0; i < variables.length; i++) {
+      const variable = variables[i];
+      docElement.style.setProperty(
+        `--ctp-dark-${variable}`,
+        `var(--ctp-${flavor}-${variable})`
+      );
+      docElement.style.setProperty(
+        `--ctp-dark-${variable}-rgb`,
+        `var(--ctp-${flavor}-${variable}-rgb)`
+      );
+      docElement.style.setProperty(
+        `--ctp-dark-${variable}-hsl`,
+        `var(--ctp-${flavor}-${variable}-hsl)`
+      );
+    }
+  }
+
+  accent.subscribe((newAccent) => {
+    document.documentElement.style.setProperty(
+      "--ctp-accent",
+      `var(--ctp-${newAccent})`
+    );
+  });
+
+  lightFlavor.subscribe((newLightFlavor) => {
+    setLightFlavor(newLightFlavor, document.documentElement);
+  });
+
+  darkFlavor.subscribe((newDarkFlavor) => {
+    setDarkFlavor(newDarkFlavor, document.documentElement);
+  });
+
+  document.addEventListener("astro:before-swap", (event) => {
+    // Pass the incoming document to set the theme on it
+    event.newDocument.documentElement.style.setProperty(
+      "--ctp-accent",
+      `var(--ctp-${accent.get()})`
+    );
+    setLightFlavor(lightFlavor.get(), event.newDocument.documentElement);
+    setDarkFlavor(darkFlavor.get(), event.newDocument.documentElement);
+  });
+
   document.addEventListener("astro:before-preparation", () => {
     document.body.classList.add("loading");
   });

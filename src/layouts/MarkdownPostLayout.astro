@@ -15,7 +15,7 @@ const { frontmatter } = Astro.props;
             <p>By {frontmatter.author}</p>
         </div>
     </article>
-    <div class="info-box">
+    <div class="elevated-card post-tags">
         <h3>Post tags:</h3>
         <div class="tags">
             {frontmatter.tags.map((tag: string) => (
