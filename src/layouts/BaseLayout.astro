@@ -1,0 +1,71 @@
+---
+import Header from "../components/Header.astro";
+import "../styles/global.css";
+
+import { ClientRouter, fade } from "astro:transitions";
+
+const { pageTitle } = Astro.props;
+
+const anim = {
+  old: {
+    name: "fade",
+    direction: "reverse",
+    duration: "200ms",
+    easing: "ease",
+  },
+  new: {
+    name: "fade",
+    duration: "200ms",
+    easing: "ease",
+  },
+};
+
+const crossFade = {
+  forwards: anim,
+  backwards: anim,
+};
+---
+
+<html lang="en" transition:name="root" transition:animate={crossFade}>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="description" content="Blog of WalkQuackBack." />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{pageTitle}</title>
+
+    <ClientRouter />
+  </head>
+  <body>
+    <div class="outer">
+      <Header />
+      <h1 transition:name="page-title" class="info-box">
+        {pageTitle}
+      </h1>
+      <main>
+        <slot />
+      </main>
+    </div>
+  </body>
+</html>
+
+<style is:global>
+  @keyframes fade {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+</style>
+
+<script is:inline>
+  document.addEventListener("astro:before-preparation", () => {
+    document.body.classList.add("loading");
+  });
+  document.addEventListener("astro:after-preparation", () => {
+    document.body.classList.remove("loading");
+  });
+</script>
