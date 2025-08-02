@@ -2,32 +2,13 @@
 import Header from "../components/Header.astro";
 import "../styles/global.css";
 
-import { ClientRouter, fade } from "astro:transitions";
+import { ClientRouter } from "astro:transitions";
 import ThemeSwitcher from "../components/ThemeSwitcher.svelte";
 
 const { pageTitle } = Astro.props;
-
-const anim = {
-  old: {
-    name: "fade",
-    direction: "reverse",
-    duration: "200ms",
-    easing: "ease",
-  },
-  new: {
-    name: "fade",
-    duration: "200ms",
-    easing: "ease",
-  },
-};
-
-const crossFade = {
-  forwards: anim,
-  backwards: anim,
-};
 ---
 
-<html lang="en" transition:name="root" transition:animate={crossFade}>
+<html lang="en" transition:name="root">
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -51,19 +32,6 @@ const crossFade = {
     <ThemeSwitcher client:load transition:persist="theme-switcher" />
   </body>
 </html>
-
-<style is:global>
-  @keyframes fade {
-    0% {
-      opacity: 0;
-    }
-    100% {
-      opacity: 1;
-    }
-  }
-</style>
-
-<script></script>
 
 <script>
   import {
