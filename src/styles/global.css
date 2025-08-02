@@ -360,17 +360,8 @@ a:has(.icon-btn) {
 
 /* Responsive */
 
-/* Extra small devices (phones, 375px and down) */
+/* Small devices (portrait tablets and large phones, 375px and down) */
 @media only screen and (max-width: 375px) {
-    :root {
-        --space: 0.5;
-        --pad: 0.5;
-        --round: 0.5;
-    }
-}
-
-/* Small devices (portrait tablets and large phones, 375px and up) */
-@media only screen and (min-width: 375px) {
     :root {
         --space: 0.75;
         --pad: 0.75;
